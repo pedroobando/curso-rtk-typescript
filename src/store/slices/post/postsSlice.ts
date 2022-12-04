@@ -59,18 +59,19 @@ export const postsSlice = createSlice({
         };
       },
     },
-    // reactionAdded(state, action) {
-    //   const { postId, reaction } = action.payload;
-    //   const existingPost = state.find((post) => post.id === postId);
-    //   if (existingPost) {
-    //     existingPost.reactions[reaction]++;
-    //   }
-    // },
+    reactionAdded(state, action: PayloadAction<{ postId: string; reaction: string }>) {
+      const { postId, reaction } = action.payload;
+      const existingPost = state.find((post) => post.id === postId);
+      if (existingPost) {
+        // str as keyof typeof obj
+        existingPost.reactions[reaction as keyof typeof existingPost.reactions]++;
+      }
+    },
   },
 });
 
 export const selectAllPosts = (state: RootState) => state.posts;
 
-export const { postAdded } = postsSlice.actions;
+export const { postAdded, reactionAdded } = postsSlice.actions;
 
 // export default postsSlice.reducer;
