@@ -1,5 +1,4 @@
-# "React Redux Toolkit para Principantes"
-# "Con TypeScript"
+# React Redux Toolkit para Principante Con TypeScript
 
 ### ~~7~~ 8 Chapters
 
