@@ -1,4 +1,5 @@
-# "React Redux Toolkit para Principantes - con TypeScript"
+# "React Redux Toolkit para Principantes"
+# "Con TypeScript"
 
 ### ~~7~~ 8 Chapters
 
@@ -44,7 +45,7 @@
 ### 💻 Source Code
 
 - 🔗 [Chapter 1 - Introduccion a Redux]
-- 🔗 [Chapter 2 Starter Code - Example Project](https://github.com/pedroobando/react_redux_toolkit/tree/main/02_lesson_starter)
+- 🔗 [Chapter 2 Starter Code - Example Project](https://github.com/pedroobando/curso-rtk-typescript/tree/main/02_lesson)
 - 🔗 [Chapter 2 Completed Code - Example Project](https://github.com/gitdagray/react_redux_toolkit/tree/main/02_lesson)
 - 🔗 [Chapter 3 Starter Code - Async Thunks](https://github.com/gitdagray/react_redux_toolkit/tree/main/03_lesson_starter)
 - 🔗 [Chapter 3 Completed Code - Async Thunks](https://github.com/gitdagray/react_redux_toolkit/tree/main/03_lesson)
