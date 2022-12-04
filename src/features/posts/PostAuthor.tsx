@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { selectAllUsers, useAppSelector } from '../../store';
 
 interface Props {
-  userId?: string | undefined;
+  userId?: number | undefined;
 }
 
-export const PostAuthor: FC<Props> = ({ userId = '' }) => {
+export const PostAuthor: FC<Props> = ({ userId = -1 }) => {
   const users = useAppSelector(selectAllUsers);
 
   const author = users.find((user) => user.id === userId);

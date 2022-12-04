@@ -1,9 +1,9 @@
 export interface IPOST {
   id: string;
   title: string;
-  content: string;
+  body: string;
   date: string;
-  userId?: string | undefined;
+  userId?: number | undefined;
   reactions: {
     thumbsUp: number;
     wow: number;
