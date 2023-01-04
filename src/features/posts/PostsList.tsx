@@ -19,7 +19,7 @@ export const PostsList = () => {
   useEffect(() => {
     if (postStatus === 'idle') {
       dispatch(fetchPosts());
-      console.log('hola mundo');
+      // console.log('hola mundo');
     }
   }, [postStatus, dispatch]);
 

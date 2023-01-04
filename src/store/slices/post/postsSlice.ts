@@ -23,29 +23,29 @@ export const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    // postAdded: {
-    //   reducer(state, action: PayloadAction<IPOST>) {
-    //     state.posts.push(action.payload);
-    //   },
-    //   prepare(title: string, content: string, userId: string) {
-    //     return {
-    //       payload: {
-    //         id: nanoid(),
-    //         title,
-    //         body: content,
-    //         date: new Date().toISOString(),
-    //         userId,
-    //         reactions: {
-    //           thumbsUp: 0,
-    //           wow: 0,
-    //           heart: 0,
-    //           rocket: 0,
-    //           coffee: 0,
-    //         },
-    //       },
-    //     };
-    //   },
-    // },
+    postAdded: {
+      reducer(state, action: PayloadAction<IPOST>) {
+        state.posts.push(action.payload);
+      },
+      prepare(title: string, content: string, userId: number = 0) {
+        return {
+          payload: {
+            id: nanoid(),
+            title,
+            body: content,
+            date: new Date().toISOString(),
+            userId,
+            reactions: {
+              thumbsUp: 0,
+              wow: 0,
+              heart: 0,
+              rocket: 0,
+              coffee: 0,
+            },
+          },
+        };
+      },
+    },
     reactionAdded(state, action: PayloadAction<{ postId: string; reaction: string }>) {
       const { postId, reaction } = action.payload;
       const existingPost = state.posts.find((post) => post.id === postId);
@@ -61,7 +61,8 @@ export const postsSlice = createSlice({
       .addCase(fetchPosts.pending, (state, action) => {
         state.status = 'loading';
       })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
+      .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<IPOST[]>) => {
+        // console.log(action.payload);
         state.status = 'succeeded';
         // Adding date and reactions
         let min = 1;
@@ -81,37 +82,33 @@ export const postsSlice = createSlice({
         state.posts = state.posts.concat(loadedPosts);
       })
       .addCase(fetchPosts.rejected, (state, action) => {
+        console.log(action);
         state.status = 'failed';
         state.error = action.error.message;
       })
-      // title, body: content, userId
       .addCase(addNewPost.fulfilled, (state, action) => {
-        // (state, action: PayloadAction<{ title: string; body: string; userId: string }>) => {
         // Fix for API post IDs:
         // Creating sortedPosts & assigning the id
         // would be not be needed if the fake API
         // returned accurate new post IDs
-        // const sortedPosts = state.posts.sort((a, b) => {
-        //   if (a.id > b.id) return 1;
-        //   if (a.id < b.id) return -1;
-        //   return 0;
-        // });
-        // action.payload.id = sortedPosts[sortedPosts.length - 1].id + 1;
+        const sortedPosts = state.posts.sort((a, b) => {
+          if (a.id > b.id) return 1;
+          if (a.id < b.id) return -1;
+          return 0;
+        });
+        action.payload.id = sortedPosts[sortedPosts.length - 1].id + 1;
         // End fix for fake API post IDs
-
-        const { title, body, userId } = action.payload as { title: string; body: string; userId: string };
-        const addNewPost = { title, body } as IPOST;
-        addNewPost.userId = Number(userId);
-        addNewPost.date = new Date().toISOString();
-        addNewPost.reactions = {
+        action.payload.userId = Number(action.payload.userId);
+        action.payload.date = new Date().toISOString();
+        action.payload.reactions = {
           thumbsUp: 0,
           wow: 0,
           heart: 0,
           rocket: 0,
           coffee: 0,
         };
-
-        state.posts.push(addNewPost);
+        console.log(action.payload);
+        state.posts.push(action.payload);
       });
   },
 });
