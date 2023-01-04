@@ -3,7 +3,7 @@ import { sub } from 'date-fns';
 
 import { IPOST } from '../../../interfaces';
 import { RootState } from '../../store';
-import { addNewPost, fetchPosts } from './thunks';
+import { addNewPost, deletePost, fetchPosts, updatePost } from './thunks';
 
 export type StatusPostType = 'idle' | 'pending' | 'loading' | 'succeeded' | 'failed';
 
@@ -30,7 +30,7 @@ export const postsSlice = createSlice({
       prepare(title: string, content: string, userId: number = 0) {
         return {
           payload: {
-            id: nanoid(),
+            id: Number(nanoid()),
             title,
             body: content,
             date: new Date().toISOString(),
@@ -46,7 +46,7 @@ export const postsSlice = createSlice({
         };
       },
     },
-    reactionAdded(state, action: PayloadAction<{ postId: string; reaction: string }>) {
+    reactionAdded(state, action: PayloadAction<{ postId: number; reaction: string }>) {
       const { postId, reaction } = action.payload;
       const existingPost = state.posts.find((post) => post.id === postId);
       if (existingPost) {
@@ -109,6 +109,27 @@ export const postsSlice = createSlice({
         };
         console.log(action.payload);
         state.posts.push(action.payload);
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          console.log('Update could not complete');
+          console.log(action.payload);
+          return;
+        }
+        const { id } = action.payload;
+        action.payload.date = new Date().toISOString();
+        const posts = state.posts.filter((post) => post.id !== id);
+        state.posts = [...posts, action.payload];
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          console.log('Delete could not complete');
+          console.log(action.payload);
+          return;
+        }
+        const { id } = action.payload;
+        const posts = state.posts.filter((post) => post.id !== id);
+        state.posts = posts;
       });
   },
 });
@@ -116,6 +137,9 @@ export const postsSlice = createSlice({
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 export const getPostsStatus = (state: RootState) => state.posts.status;
 export const getPostsError = (state: RootState) => state.posts.error;
+
+export const selectPostById = (state: RootState, postId: number | undefined) =>
+  state.posts.posts.find((post) => post.id === postId);
 
 export const { reactionAdded } = postsSlice.actions;
 
